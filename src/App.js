@@ -6,87 +6,79 @@ import { api } from './services/api'
 
 import './globalStyles.css'
 
-function App() {
+function App () {
+  const [companyName, setCompanyName] = useState('')
+  const [seriesData, setSeriesData] = useState([])
 
-	const [companyName, setCompanyName] = useState('')
-	const [price, setPrice] = useState(0)
-	const [timesData, setTimesData] = useState([])
-	const [seriesData, setSeriesData] = useState([])
+  const getMarketStocks = async (filterData) => {
+    setSeriesData([])
 
-	const getMarketStocks = async (filterData) => {
-		try {
-			const response = await api.get(
-				filterData ? 
-					`/stock/market/batch?symbols=aapl,fb,tsla&types=quote,chart&range=1m&filter=${filterData}`
-				:
-					'/stock/market/batch?symbols=aapl,fb,tsla&types=quote,chart&range=1m'
-			)
+    try {
+      const response = await api.get(
+        filterData
+          ? `/stock/${filterData}/batch?types=quote,chart&range=1m`
+          : '/stock/market/batch?symbols=aapl,fb,tsla&types=quote,chart&range=1m'
+      )
 
-			if (response.statusText !== 'OK') {
-				throw new Error('Error requesting market stock data...')
-			}
-		
-			Object.entries(response.data).forEach(data => {		
+      if (response.statusText !== 'OK') {
+        throw new Error('Error requesting market stock data...')
+      }
 
-				let series = {
-					name: data[1].quote.companyName,
-					price: data[1].quote.latestPrice
-				}
+      if (!filterData) {
+        Object.entries(response.data).forEach((data) => {
+          setSeriesData((series) => [
+            {
+              name: data[1].chart[0].symbol,
+              data: [
+                data[1].chart[0].open,
+                data[1].chart[0].close
+              ]
+            },
+            ...series
+          ])
+        })
+      } else {
+        setSeriesData((series) => [
+          {
+            name: response.data.chart[0].symbol,
+            data: [
+              response.data.chart[0].open,
+              response.data.chart[0].close
+            ]
+          },
+          ...series
+        ])
 
-				setSeriesData(data => ([series, ...data]))
+        setCompanyName(response.data.quote.companyName)
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
-				let times = data[1].quote.latestTime
+  const handleSearch = (event) => {
+    event.preventDefault()
 
-				setTimesData(data => ([times, ...data]))
-				
-			})
-			
-		} catch (error) {
-			console.error(error)
-		}
+    getMarketStocks(event.target[0].value)
+  }
 
-	}
-
-	const getCompanyStocks = async (companySymbol, filterData) => {
-		try {
-			const response = await api.get(
-				filterData ? 
-					`/stock/${companySymbol}/batch?types=quote,chart&range=1m&filter=${filterData}`
-				:
-					`/stock/${companySymbol}/batch?types=quote,chart&range=1m`	
-			)
-
-			if (response.statusText !== 'OK') {
-				throw new Error('Error requesting company stock data...')
-			}
-		
-
-		} catch (error) {
-			console.error(error)
-		}	
-		
-	}
-
-
-	useEffect(() => {
-	
-		getMarketStocks()
-
-	}, [])
+  useEffect(() => {
+    getMarketStocks()
+  }, [])
 
   return (
     <div>
-    	<div>			
-			<h1>{companyName}</h1>
-			
-			<div>
-				$ {price}
-			</div>
-		</div>
+      <div>
+        <div>{companyName}</div>
 
-  		<Charts series={seriesData} times={timesData}/> 
+        <form onSubmit={handleSearch}>
+          <input type='text' />
+        </form>
+      </div>
+
+      <Charts series={seriesData} />
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
