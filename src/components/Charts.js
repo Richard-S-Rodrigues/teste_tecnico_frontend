@@ -1,11 +1,14 @@
 import Chart from 'react-apexcharts'
 
+import PropTypes from 'prop-types'
+
 function Charts ({ series }) {
+  
   const chartData = {
     options: {
       chart: {
-        height: 350,
-        type: 'bar'
+        height: 450,
+        type: 'line'
       },
 
       xaxis: {
@@ -34,6 +37,17 @@ function Charts ({ series }) {
       </div>
     </div>
   )
+}
+
+Charts.propTypes = {
+  series: PropTypes.array
+}
+
+Charts.defaultProps = {
+  series: {
+    name: '',
+    data: []
+  }
 }
 
 export default Charts
