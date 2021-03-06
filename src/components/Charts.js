@@ -8,23 +8,8 @@ function Charts ({ seriesData, chartType, title }) {
     options: {
       chart: {
         height: 350,
-        type: 'bar',
+        type: chartType,
       },
-
-      responsive: [{
-        breakpoint: 438,
-        options: {
-          subtitle: {
-            style: {
-              fontSize: '16px',           
-            }
-          },
-          chart: {
-            width: '100%',
-            height: 500
-          }
-        }
-      }],
 
       subtitle: {
         text: title,
@@ -46,6 +31,13 @@ function Charts ({ seriesData, chartType, title }) {
           borderRadius: 6,
           columnWidth: '50%',
           distributed: true,
+        },
+
+        candlestick: {
+          colors: {
+            upward: '#669ced',
+            downward: '#ab2615'
+          }
         }
       },
       dataLabels: {
@@ -55,13 +47,27 @@ function Charts ({ seriesData, chartType, title }) {
         show: false
       },
           
+      responsive: [{
+        breakpoint: 438,
+        options: {
+          subtitle: {
+            style: {
+              fontSize: '16px',           
+            }
+          },
+          chart: {
+            width: '100%',
+            height: 500
+          }
+        }
+      }],
+    
     },
+    
     series: [{
       name: 'Price',
-      data: seriesData
-    }],
-
-    
+      data: Array.from(seriesData).reverse()
+    }],   
 
   }
 
@@ -78,14 +84,18 @@ function Charts ({ seriesData, chartType, title }) {
 }
 
 Charts.propTypes = {
-  series: PropTypes.object
+  series: PropTypes.object,
+  chartType: PropTypes.string,
+  title: PropTypes.string
 }
 
 Charts.defaultProps = {
   series: {
     name: '',
     data: []
-  }
+  },
+  chartType: '',
+  title: ''
 }
 
 export default Charts

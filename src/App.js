@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import Charts from './components/Charts'
+/* import CryptocurrencyData from './components/CryptocurrencyData' */
 
 import { api } from './services/api'
 
@@ -11,11 +12,14 @@ function App () {
   const [companyPrice, setCompanyPrice] = useState(0)
   const [seriesData, setSeriesData] = useState([])
 
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
 
   const getMarketStocks = async (filterData) => {
-    setSeriesData([])
- 
+    setSeriesData([])    
+    setCompanyName('')
+
+    setIsLoading(true)
+
     try {
       const response = await api.get(
         filterData
@@ -26,30 +30,39 @@ function App () {
       if (response.statusText !== 'OK') {
         throw new Error('Error requesting market stock data...')
       }
-      
-      if (!filterData) {
-        Object.entries(response.data).forEach((data) => {
 
+      if (!filterData) {  
+        Object.entries(response.data).forEach((data) => {
           setSeriesData((series) => [
             {
-              x: data[1].chart[0].symbol,
+              x: data[1].quote.symbol,
               y: data[1].quote.latestPrice.toFixed(2)
             },
             ...series
           ])
         })
       } else {
-        setSeriesData((series) => [
-          {
-            x: response.data.chart[0].symbol,
-            y: response.data.quote.latestPrice.toFixed(2)
-          },
-          ...series
-        ])
 
+        response.data.chart.forEach(chart => {
+
+          setSeriesData((series) => [
+            {
+              x: chart.date,
+              y: [
+                chart.open.toFixed(2),
+                chart.high.toFixed(2),
+                chart.low.toFixed(2),
+                chart.close.toFixed(2),
+              ]
+            },
+            ...series
+          ])
+        })
+        
         setCompanyName(response.data.quote.companyName)
         setCompanyPrice(response.data.quote.latestPrice.toFixed(2))
       }
+     
     } catch (error) {
       console.error(error)
     }
@@ -62,6 +75,8 @@ function App () {
     event.preventDefault()
 
     getMarketStocks(event.target[0].value)
+
+    event.target[0].value = ''    
   }
 
   useEffect(() => {
@@ -96,15 +111,34 @@ function App () {
               title='Top Tech Companies Latest Price'
             />
           ) : (
-            <Charts 
-              seriesData={seriesData} 
-              chartType='line' 
-              title={`${companyName} - $${companyPrice}`} 
-            />
+            <>
+              <div>
+                <button
+                  style={{
+                    border: 0,
+                    borderRadius: '1em',
+                    padding: '.8em',
+                    cursor: 'pointer',
+                    background: '#669ced',
+                    color: '#fff',
+                    fontWeight: 600,
+                    fontSize: '17px',
+                    marginTop: '1em'
+                  }} 
+                  onClick={() => getMarketStocks()}
+                >
+                  See top techs stock prices 
+                </button>  
+              </div>
+              <Charts 
+                seriesData={seriesData} 
+                chartType='candlestick' 
+                title={`${companyName} - $${companyPrice}`} 
+              />
+            </>
           )}
           </>
       )}
-      
       
     </div>
   )
