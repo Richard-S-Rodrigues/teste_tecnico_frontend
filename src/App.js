@@ -4,35 +4,36 @@ import Charts from './components/Charts'
 
 import { api } from './services/api'
 
-import './globalStyles.css'
+import Loader from 'react-loader-spinner'
 
 function App () {
   const [companyName, setCompanyName] = useState('')
+  const [companyPrice, setCompanyPrice] = useState(0)
   const [seriesData, setSeriesData] = useState([])
+
+  const [isLoading, setIsLoading] = useState(true)
 
   const getMarketStocks = async (filterData) => {
     setSeriesData([])
-
+ 
     try {
       const response = await api.get(
         filterData
           ? `/stock/${filterData}/batch?types=quote,chart&range=1m`
-          : '/stock/market/batch?symbols=aapl,fb,tsla&types=quote,chart&range=1m'
+          : '/stock/market/batch?symbols=aapl,amzn,msft,googl,fb,nvda&types=quote,chart&range=1m'
       )
 
       if (response.statusText !== 'OK') {
         throw new Error('Error requesting market stock data...')
       }
-
+      
       if (!filterData) {
         Object.entries(response.data).forEach((data) => {
+
           setSeriesData((series) => [
             {
-              name: data[1].chart[0].symbol,
-              data: [
-                data[1].chart[0].open,
-                data[1].chart[0].close
-              ]
+              x: data[1].chart[0].symbol,
+              y: data[1].quote.latestPrice.toFixed(2)
             },
             ...series
           ])
@@ -40,20 +41,21 @@ function App () {
       } else {
         setSeriesData((series) => [
           {
-            name: response.data.chart[0].symbol,
-            data: [
-              response.data.chart[0].open,
-              response.data.chart[0].close
-            ]
+            x: response.data.chart[0].symbol,
+            y: response.data.quote.latestPrice.toFixed(2)
           },
           ...series
         ])
 
         setCompanyName(response.data.quote.companyName)
+        setCompanyPrice(response.data.quote.latestPrice.toFixed(2))
       }
     } catch (error) {
       console.error(error)
     }
+
+    setIsLoading(false)
+
   }
 
   const handleSearch = (event) => {
@@ -68,15 +70,42 @@ function App () {
 
   return (
     <div>
-      <div>
-        <div>{companyName}</div>
+      <form onSubmit={handleSearch}>
+        <input 
+          type='text' 
+          placeholder='Search for company symbol. e.g. AAPL'
+          style={{width: '80%'}} 
+        />
+      </form>
 
-        <form onSubmit={handleSearch}>
-          <input type='text' />
-        </form>
-      </div>
+      {isLoading ? (
+          <Loader
+            type="ThreeDots"
+            color="#081524"
+            height={100}
+            width={100}
+            style={{textAlign: 'center'}} 
+          />
 
-      <Charts series={seriesData} />
+        ) : (
+          <>
+          {!companyName ? (
+            <Charts 
+              seriesData={seriesData} 
+              chartType='bar' 
+              title='Top Tech Companies Latest Price'
+            />
+          ) : (
+            <Charts 
+              seriesData={seriesData} 
+              chartType='line' 
+              title={`${companyName} - $${companyPrice}`} 
+            />
+          )}
+          </>
+      )}
+      
+      
     </div>
   )
 }
