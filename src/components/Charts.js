@@ -11,7 +11,7 @@ function Charts ({ seriesData, chartType, title }) {
         type: chartType,
       },
 
-      subtitle: {
+      title: {
         text: title,
         align: 'center',
         style: {
@@ -72,13 +72,13 @@ function Charts ({ seriesData, chartType, title }) {
   }
 
   return (
-    <div style={{margin: '0 auto'}}>   
-      <Chart
-        options={chartData.options}
-        series={chartData.series}
-        width='95%'
-        type={chartType}
-      />
+    <div style={{margin: '0 auto'}}>
+        <Chart
+          options={chartData.options}
+          series={chartData.series}
+          width='95%'
+          type={chartType}
+        />   
     </div>
   )
 }
