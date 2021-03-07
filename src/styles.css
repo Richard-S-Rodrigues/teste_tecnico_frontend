@@ -1,0 +1,42 @@
+body {
+  width: 100%;
+
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.container {
+  width: 90%;
+  margin: 0 auto;
+}
+
+.actionsContainer {
+	text-align: center;
+  width: 100%;
+}
+
+.actionsContainer button {
+	border: 0;
+  border-radius: .6em;
+  padding: 1em;
+  margin-right: 1em;
+  background: #216fed;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+
+  transition: background-color .6s;
+
+  margin-top: 1em;
+}
+
+button:hover {
+  background: #4f8ff7;
+}
+
+@media (max-width: 303px) {
+  .actionsContainer button {
+    font-size: 16px;
+  }
+}

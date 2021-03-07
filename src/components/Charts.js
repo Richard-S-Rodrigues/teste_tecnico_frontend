@@ -2,13 +2,30 @@ import Chart from 'react-apexcharts'
 
 import PropTypes from 'prop-types'
 
-function Charts ({ seriesData, chartType, title }) {
+function Charts ({ seriesData, chartType, title, getData }) {
 
   const chartData = {
+    series: [{
+      name: 'Price',
+      data: Array.from(seriesData).reverse()
+    }],
+
     options: {
       chart: {
         height: 350,
         type: chartType,
+        events: {
+          click: (event, chartContext, config) => {
+            if (config.dataPointIndex !== -1 
+              && chartData.options.chart.type === 'bar') {
+
+              getData(chartData.series[0].data[config.dataPointIndex].x)  
+            }
+          },
+          dataPointMouseEnter: (event) => {
+            event.target.style.cursor = "pointer"
+          }
+        }
       },
 
       title: {
@@ -18,12 +35,17 @@ function Charts ({ seriesData, chartType, title }) {
           fontSize: '26px',
         }
       },
+      subtitle: {
+        text: chartType === 'bar' ? 
+          'Click in the bar to see company stock prices' : '',
+        align: 'center'
+      },
 
       colors: [
         '#081524',
-        '#4c92fc',
-        '#669ced',
-        '#ab2615'
+        '#4f8ff7',
+        '#216fed',
+        '#de4343'
       ],
 
       plotOptions: {
@@ -35,8 +57,8 @@ function Charts ({ seriesData, chartType, title }) {
 
         candlestick: {
           colors: {
-            upward: '#669ced',
-            downward: '#ab2615'
+            upward: '#216fed',
+            downward: '#de4343'
           }
         }
       },
@@ -50,6 +72,11 @@ function Charts ({ seriesData, chartType, title }) {
       responsive: [{
         breakpoint: 438,
         options: {
+          title: {
+            style: {
+              fontSize: '18px'
+            }
+          },
           subtitle: {
             style: {
               fontSize: '16px',           
@@ -64,19 +91,15 @@ function Charts ({ seriesData, chartType, title }) {
     
     },
     
-    series: [{
-      name: 'Price',
-      data: Array.from(seriesData).reverse()
-    }],   
 
   }
 
   return (
-    <div style={{margin: '0 auto'}}>
+    <div>
         <Chart
           options={chartData.options}
           series={chartData.series}
-          width='95%'
+          width='85%'
           type={chartType}
         />   
     </div>
@@ -86,7 +109,8 @@ function Charts ({ seriesData, chartType, title }) {
 Charts.propTypes = {
   series: PropTypes.object,
   chartType: PropTypes.string,
-  title: PropTypes.string
+  title: PropTypes.string,
+  getData: PropTypes.func,
 }
 
 Charts.defaultProps = {
@@ -95,7 +119,8 @@ Charts.defaultProps = {
     data: []
   },
   chartType: '',
-  title: ''
+  title: '',
+  getData: null
 }
 
 export default Charts

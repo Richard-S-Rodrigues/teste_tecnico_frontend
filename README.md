@@ -1,13 +1,6 @@
-API - IEX Cloud
+![](https://mediarsolutions.com/wp-content/uploads/2021/02/teste_tecnico_front.png)
 
-## To Do
+## API
+`IEX Cloud`
 
-[x] - Get latest price of top tech companies
-[x] - Show charts by each company
-[] - Get cryptocurrency data
-[] - get bid, ask and latest price from cryptocurrency
-
-
-
-
-[] - Trocar api de testes para api pra produção
+Crie uma pasta *.env* para o Token

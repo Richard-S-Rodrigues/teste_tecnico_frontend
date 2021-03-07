@@ -70,32 +70,16 @@ const IndustriesStock = () => {
 	    setIsLoading(false)
 	}
 
-	const handleSearch = (event) => {
-    	event.preventDefault()
-
-    	getData(event.target[0].value)
-
-    	event.target[0].value = ''    
-  	}
-
 	useEffect(() => {
 		getData()
 	}, [])
 
 	return (
-		<div>
-			<form onSubmit={handleSearch}>
-		        <input 
-		          type='text' 
-		          placeholder='Search for company symbol. e.g. AAPL'
-		          style={{width: '80%'}} 
-		        />
-	      	</form>
-
+		<>
 	      {isLoading ? (
 	          <Loader
 	            type="ThreeDots"
-	            color="#081524"
+	            color="#216fed"
 	            height={100}
 	            width={100}
 	            style={{textAlign: 'center'}} 
@@ -108,6 +92,7 @@ const IndustriesStock = () => {
 	              seriesData={seriesData} 
 	              chartType='bar' 
 	              title='Top Tech Companies Latest Price'
+	              getData={getData}
 	            />
 	          ) : (
 	            <>
@@ -118,7 +103,7 @@ const IndustriesStock = () => {
 	                    borderRadius: '1em',
 	                    padding: '.8em',
 	                    cursor: 'pointer',
-	                    background: '#669ced',
+	                    background: '#4f8ff7',
 	                    color: '#fff',
 	                    fontWeight: 600,
 	                    fontSize: '17px',
@@ -126,19 +111,20 @@ const IndustriesStock = () => {
 	                  }} 
 	                  onClick={() => getData()}
 	                >
-	                  See top techs stock prices 
+	                  Tech companies latest price 
 	                </button>  
 	              </div>
 	              <Charts 
 	                seriesData={seriesData} 
 	                chartType='candlestick' 
 	                title={`${companyName} - $${companyPrice}`} 
+	                getData={null}
 	              />
 	            </>
 	          )}
 	          </>
 	      )}
-		</div>
+		</>
 	)
 }
 
