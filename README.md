@@ -1,7 +1,7 @@
 ![](https://mediarsolutions.com/wp-content/uploads/2021/02/teste_tecnico_front.png)
 
 ## To Do
-`Crie uma pasta .env para o token da api`
+`Crie uma pasta .env e insira o token da api em uma variável 'REACT_APP_PRIVATE_API_KEY'`
 
 ## API
 <a href='https://iexcloud.io/'>`IEX Cloud`</a>
