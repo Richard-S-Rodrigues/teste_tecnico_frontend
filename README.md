@@ -1,7 +1,7 @@
 ![](https://mediarsolutions.com/wp-content/uploads/2021/02/teste_tecnico_front.png)
 
 ## To Do
-`Crie uma pasta *.env* para o Token`
+`Crie uma pasta .env para o Token`
 
 ## API
 <a href='https://iexcloud.io/'>`IEX Cloud`</a>
