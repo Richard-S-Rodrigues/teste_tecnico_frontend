@@ -19,6 +19,7 @@ function Charts ({ seriesData, chartType, title, getData }) {
             if (config.dataPointIndex !== -1 
               && chartData.options.chart.type === 'bar') {
 
+              // Request specific data when clicked in a bar
               getData(chartData.series[0].data[config.dataPointIndex].x)  
             }
           },
