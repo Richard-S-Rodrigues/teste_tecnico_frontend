@@ -1,59 +1,19 @@
-import { useState } from 'react'
+import Header from "./components/Header";
+import IndustriesStock from "./components/IndustriesStock";
 
-import IndustriesStock from './components/IndustriesStock'
-import IntradayPrices from './components/IntradayPrices'
+import "./global.css";
 
-import './styles.css'
-
-function App () {
-  const [symbol, setSymbol] = useState('AAPL')
-
+function App() {
   return (
-    <div className='container'>
-      <div>
+    <div className="container">
+      <>
+        <Header />
+      </>
+      <>
         <IndustriesStock />
-        <hr style={{color: '#fff'}}></hr>
-      </div>
-       <div style={{marginTop: '5em'}}>
-          <div className='actionsContainer'>
-           <button 
-            onClick={() => setSymbol('AAPL')}
-            >
-              AAPl
-           </button>
-           <button 
-            onClick={() => setSymbol('AMZN')}
-            >
-              AMZN
-           </button>
-           <button 
-            onClick={() => setSymbol('MSFT')}
-            >
-              MSFT
-           </button>
-           <button 
-            onClick={() => setSymbol('GOOGL')}
-            >
-              GOOGL
-           </button>
-           <button 
-            onClick={() => setSymbol('FB')}
-            >
-              FB
-           </button>
-           <button 
-            onClick={() => setSymbol('NVDA')}
-            >
-              NVDA
-           </button>
-          </div>
-
-          <div>
-            <IntradayPrices companySymbol={symbol}/>
-          </div>
-       </div>    
+      </>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

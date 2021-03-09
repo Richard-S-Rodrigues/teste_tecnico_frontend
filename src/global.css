@@ -1,3 +1,12 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap");
+
+:root {
+  --dark: #262e38;
+  --light-blue: #4f8ff7;
+  --blue: #216fed;
+  --red: #de4343;
+}
+
 body {
   width: 100%;
 
@@ -5,19 +14,35 @@ body {
   padding: 0;
   box-sizing: border-box;
 }
+
+body,
+input,
+button {
+  font-family: "Poppins", sans-serif;
+}
+
+li {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: var(--dark);
+}
+
 .container {
   width: 90%;
   margin: 0 auto;
 }
 
 .actionsContainer {
-	text-align: center;
+  text-align: center;
   width: 100%;
 }
 
 .actionsContainer button {
-	border: 0;
-  border-radius: .6em;
+  border: 0;
+  border-radius: 0.6em;
   padding: 1em;
   margin-right: 1em;
   background: #216fed;
@@ -26,7 +51,7 @@ body {
   font-weight: 600;
   cursor: pointer;
 
-  transition: background-color .6s;
+  transition: background-color 0.6s;
 
   margin-top: 1em;
 }

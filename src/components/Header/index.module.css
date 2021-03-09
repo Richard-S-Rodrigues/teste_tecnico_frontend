@@ -1,0 +1,76 @@
+.container {
+	width: 100%;
+	display: flex;
+
+	margin-bottom: 3em;
+}
+
+.logoContainer {
+	width: 60%;
+}
+
+.logoContainer h1 {
+	color: var(--dark);
+}
+
+.logoContainer img {
+	width: 5em;
+}
+
+.navContainer {
+	width: 100%;
+}
+
+.navContainer ul {
+	display: flex;
+	justify-content: space-between;
+}
+
+.navContainer ul li:first-child {
+	margin-right: 5em;
+}
+
+.navContainer ul li a {
+	font-size: 18px;
+	font-weight: 700;
+
+	transition: 0.5s;
+}
+
+.navContainer ul li a:after {
+	content: ">>";
+	position: relative;
+	opacity: 0;
+	left: 30px;
+	transition: 0.5s;
+}
+
+.navContainer ul li a:hover {
+	padding-right: 24px;
+	padding-left: 8px;
+}
+
+.navContainer ul li a:hover:after {
+	opacity: 1;
+	right: 5px;
+
+	color: var(--blue);
+}
+
+@media (max-width: 450px) {
+	.container {
+		display: block;
+	}
+
+	.logoContainer {
+		width: 100%;
+	}
+
+	.navContainer ul {
+		display: block;
+	}
+
+	.navContainer ul li {
+		margin-top: 1em;
+	}
+}
