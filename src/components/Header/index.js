@@ -8,12 +8,10 @@ const Header = () => {
 	return (
 		<header className={styles.container}>
 			<div className={styles.logoContainer}>
-				<Link to="/">
-					<h1>
-						<img src={Logo} alt="Mediar Logo" />
-						Graphs
-					</h1>
-				</Link>
+				<h1>
+					<img src={Logo} alt="Mediar Logo" />
+					Graphs
+				</h1>
 			</div>
 			<nav className={styles.navContainer}>
 				<ul>

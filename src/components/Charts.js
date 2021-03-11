@@ -1,8 +1,12 @@
+import { useHistory } from "react-router-dom";
+
 import Chart from "react-apexcharts";
 
 import PropTypes from "prop-types";
 
-function Charts({ seriesData, chartType, title, getData }) {
+function Charts({ seriesData, chartType, title }) {
+  const history = useHistory();
+
   const chartBar = {
     chart: {
       height: 350,
@@ -10,8 +14,10 @@ function Charts({ seriesData, chartType, title, getData }) {
       events: {
         click: (event, chartContext, config) => {
           if (config.dataPointIndex !== -1) {
-            // Request specific data when clicked in a bar
-            getData(chartData.series[0].data[config.dataPointIndex].x);
+            // Redirect to specific company stocks when clicked in a bar
+            history.push(
+              `/stocks/${chartData.series[0].data[config.dataPointIndex].x}`
+            );
           }
         },
         dataPointMouseEnter: (event) => {
@@ -60,7 +66,9 @@ function Charts({ seriesData, chartType, title, getData }) {
       },
       subtitle: {
         text:
-          chartType === "bar" && "Click in the bar to see company stock prices",
+          chartType === "bar"
+            ? "Click in the bar to see company stock prices"
+            : "",
         align: "center",
       },
 
@@ -145,7 +153,6 @@ Charts.propTypes = {
   series: PropTypes.object,
   chartType: PropTypes.string,
   title: PropTypes.string,
-  getData: PropTypes.func,
 };
 
 Charts.defaultProps = {
@@ -155,7 +162,6 @@ Charts.defaultProps = {
   },
   chartType: "",
   title: "",
-  getData: null,
 };
 
 export default Charts;

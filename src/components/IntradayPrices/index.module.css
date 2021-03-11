@@ -1,0 +1,20 @@
+.searchContainer {
+	width: 100%;
+	margin-bottom: 2em;
+}
+
+.searchContainer input {
+	margin-right: 1em;
+}
+
+@media (max-width: 526px) {
+	.searchContainer input {
+		width: 80%;
+	}
+
+	.searchContainer button {
+		width: 80%;
+
+		margin: 1em 0;
+	}
+}

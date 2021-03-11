@@ -6,7 +6,9 @@ import Loader from "react-loader-spinner";
 
 import PropTypes from "prop-types";
 
-import { intradayPrices } from "../services/getData";
+import { intradayPricesData } from "../../services/getData";
+
+import styles from "./index.module.css";
 
 const IntradayPrices = () => {
 	const [companySymbol, setCompanySymbol] = useState("aapl");
@@ -30,7 +32,7 @@ const IntradayPrices = () => {
 		setIsError(false);
 
 		try {
-			const response = await intradayPrices(companySymbol);
+			const response = await intradayPricesData(companySymbol);
 
 			if (response.statusText !== "OK") {
 				throw new Error("Error requesting data");
@@ -183,7 +185,7 @@ const IntradayPrices = () => {
 		<>
 			{isError && <div className="isError">Error:{error}</div>}
 
-			<form onSubmit={handleSearch}>
+			<form onSubmit={handleSearch} className={styles.searchContainer}>
 				<input type="text" placeholder="Search" />
 				<button type="submit">Submit</button>
 			</form>

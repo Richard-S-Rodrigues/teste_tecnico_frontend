@@ -1,10 +1,10 @@
 import api from "./api";
 
-export const intradayPrices = (companySymbol = "aapl") => {
+export const intradayPricesData = (companySymbol = "aapl") => {
 	return api.get(`/stock/${companySymbol}/intraday-prices?chartLast=5`);
 };
 
-export const industriesStock = (companySymbol) => {
+export const industriesStockData = (companySymbol) => {
 	return api.get(
 		companySymbol
 			? `/stock/${companySymbol}/batch?types=quote,chart&range=1m`

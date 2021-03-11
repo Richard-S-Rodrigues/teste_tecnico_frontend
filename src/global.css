@@ -35,29 +35,29 @@ a {
   margin: 0 auto;
 }
 
-.actionsContainer {
-  text-align: center;
-  width: 100%;
-}
+button {
+  background: var(--blue);
+  color: var(--dark);
 
-.actionsContainer button {
   border: 0;
-  border-radius: 0.6em;
+  border-radius: 0.5em;
   padding: 1em;
-  margin-right: 1em;
-  background: #216fed;
-  color: #fff;
-  font-size: 18px;
-  font-weight: 600;
+
+  font-size: 16px;
+  font-weight: 700;
+
   cursor: pointer;
-
-  transition: background-color 0.6s;
-
-  margin-top: 1em;
+  transition: all 0.8s;
 }
 
 button:hover {
-  background: #4f8ff7;
+  background: var(--light-blue);
+  color: #fff;
+}
+
+input {
+  padding: 1em;
+  font-size: 16px;
 }
 
 .isError {
@@ -75,10 +75,4 @@ button:hover {
   left: 0;
   display: inline-flex;
   justify-content: center;
-}
-
-@media (max-width: 303px) {
-  .actionsContainer button {
-    font-size: 16px;
-  }
 }
