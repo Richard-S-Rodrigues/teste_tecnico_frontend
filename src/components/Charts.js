@@ -3,6 +3,38 @@ import Chart from "react-apexcharts";
 import PropTypes from "prop-types";
 
 function Charts({ seriesData, chartType, title, getData }) {
+  const chartBar = {
+    chart: {
+      height: 350,
+      type: "bar",
+      events: {
+        click: (event, chartContext, config) => {
+          if (config.dataPointIndex !== -1) {
+            // Request specific data when clicked in a bar
+            getData(chartData.series[0].data[config.dataPointIndex].x);
+          }
+        },
+        dataPointMouseEnter: (event) => {
+          event.target.style.cursor = "pointer";
+        },
+      },
+    },
+  };
+
+  const chartCandlestick = {
+    chart: {
+      height: 350,
+      type: "candlestick",
+    },
+  };
+
+  const chartPolarArea = {
+    chart: {
+      height: 350,
+      type: "polarArea",
+    },
+  };
+
   const chartData = {
     series: [
       {
@@ -12,24 +44,12 @@ function Charts({ seriesData, chartType, title, getData }) {
     ],
 
     options: {
-      chart: {
-        height: 350,
-        type: chartType,
-        events: {
-          click: (event, chartContext, config) => {
-            if (
-              config.dataPointIndex !== -1 &&
-              chartData.options.chart.type === "bar"
-            ) {
-              // Request specific data when clicked in a bar
-              getData(chartData.series[0].data[config.dataPointIndex].x);
-            }
-          },
-          dataPointMouseEnter: (event) => {
-            event.target.style.cursor = "pointer";
-          },
-        },
-      },
+      chart:
+        chartType === "bar"
+          ? chartBar.chart
+          : chartType === "candlestick"
+          ? chartCandlestick
+          : chartType === "polarArea" && chartPolarArea,
 
       title: {
         text: title,
@@ -40,9 +60,7 @@ function Charts({ seriesData, chartType, title, getData }) {
       },
       subtitle: {
         text:
-          chartType === "bar"
-            ? "Click in the bar to see company stock prices"
-            : "",
+          chartType === "bar" && "Click in the bar to see company stock prices",
         align: "center",
       },
 
@@ -95,12 +113,30 @@ function Charts({ seriesData, chartType, title, getData }) {
 
   return (
     <div>
-      <Chart
-        options={chartData.options}
-        series={chartData.series}
-        width="85%"
-        type={chartType}
-      />
+      {chartType === "bar" ? (
+        <Chart
+          options={chartData.options}
+          series={chartData.series}
+          width="85%"
+          type="bar"
+        />
+      ) : chartType === "candlestick" ? (
+        <Chart
+          options={chartData.options}
+          series={chartData.series}
+          width="85%"
+          type="candlestick"
+        />
+      ) : (
+        chartType === "polarArea" && (
+          <Chart
+            options={chartData.options}
+            series={chartData.series}
+            width="85%"
+            type="polarArea"
+          />
+        )
+      )}
     </div>
   );
 }

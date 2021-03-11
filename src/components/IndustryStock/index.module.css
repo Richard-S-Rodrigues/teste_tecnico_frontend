@@ -1,0 +1,41 @@
+.cardsContainer {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+}
+
+.card {
+	display: flex;
+	flex-direction: column;
+
+	width: 16em;
+
+	padding: 1em;
+	padding-bottom: 2em;
+
+	box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.5);
+}
+
+.card span {
+	font-size: 18px;
+	font-weight: 600;
+}
+
+.card small {
+	font-weight: 400;
+	color: #6b6b6b;
+}
+
+@media (max-width: 765px) {
+	.cardsContainer {
+		display: block;
+	}
+
+	.card {
+		width: 80%;
+		margin-bottom: 1em;
+	}
+}
+
+.chartContainer {
+	margin-top: 4em;
+}

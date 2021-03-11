@@ -2,19 +2,23 @@ import { useEffect, useState } from "react";
 
 import Chart from "react-apexcharts";
 
-import { api } from "../services/api";
-
 import Loader from "react-loader-spinner";
 
 import PropTypes from "prop-types";
 
-const IntradayPrices = ({ companySymbol }) => {
+import { intradayPrices } from "../services/getData";
+
+const IntradayPrices = () => {
+	const [companySymbol, setCompanySymbol] = useState("aapl");
+
 	const [openPrice, setOpenPrice] = useState([]);
 	const [lowPrice, setLowPrice] = useState([]);
 	const [highPrice, setHighPrice] = useState([]);
 	const [closePrice, setClosePrice] = useState([]);
 
 	const [isLoading, setIsLoading] = useState(false);
+	const [isError, setIsError] = useState(false);
+	const [error, setError] = useState("");
 
 	const getData = async (companySymbol) => {
 		setOpenPrice([]);
@@ -23,51 +27,62 @@ const IntradayPrices = ({ companySymbol }) => {
 		setClosePrice([]);
 
 		setIsLoading(true);
+		setIsError(false);
 
 		try {
-			const response = await api.get(
-				`/stock/${companySymbol}/intraday-prices?chartLast=5`
-			);
+			const response = await intradayPrices(companySymbol);
 
 			if (response.statusText !== "OK") {
-				throw new Error("Error requesting intraday prices data...");
+				throw new Error("Error requesting data");
 			}
 
-			response.data.forEach((data) => {
-				setOpenPrice((oData) => [
+			response.data.forEach((value) => {
+				setOpenPrice((oValue) => [
 					{
-						x: data.label,
-						y: data.open.toFixed(2),
+						x: value.label,
+						y: value.open.toFixed(2),
 					},
-					...oData,
+					...oValue,
 				]);
-				setLowPrice((lData) => [
+				setLowPrice((lValue) => [
 					{
-						x: data.label,
-						y: data.low.toFixed(2),
+						x: value.label,
+						y: value.low.toFixed(2),
 					},
-					...lData,
+					...lValue,
 				]);
-				setHighPrice((hData) => [
+				setHighPrice((hValue) => [
 					{
-						x: data.label,
-						y: data.high.toFixed(2),
+						x: value.label,
+						y: value.high.toFixed(2),
 					},
-					...hData,
+					...hValue,
 				]);
-				setClosePrice((cData) => [
+				setClosePrice((cValue) => [
 					{
-						x: data.label,
-						y: data.close.toFixed(2),
+						x: value.label,
+						y: value.close.toFixed(2),
 					},
-					...cData,
+					...cValue,
 				]);
 			});
 		} catch (error) {
-			console.error(error);
+			console.error(error.message);
+			setIsError(true);
+			setError(error.message);
 		}
 
 		setIsLoading(false);
+	};
+
+	const handleSearch = (event) => {
+		event.preventDefault();
+		const searchItem = event.target[0].value;
+
+		setCompanySymbol(searchItem);
+		getData(searchItem);
+
+		event.target[0].value = "";
 	};
 
 	useEffect(() => {
@@ -166,22 +181,30 @@ const IntradayPrices = ({ companySymbol }) => {
 
 	return (
 		<>
-			{isLoading ? (
-				<Loader
-					type="ThreeDots"
-					color="#216fed"
-					height={100}
-					width={100}
-					style={{ textAlign: "center" }}
-				/>
-			) : (
-				<Chart
-					options={chartData.options}
-					series={chartData.series}
-					width="85%"
-					type="line"
-				/>
-			)}
+			{isError && <div className="isError">Error:{error}</div>}
+
+			<form onSubmit={handleSearch}>
+				<input type="text" placeholder="Search" />
+				<button type="submit">Submit</button>
+			</form>
+			<div>
+				{isLoading ? (
+					<Loader
+						type="ThreeDots"
+						color="#216fed"
+						height={100}
+						width={100}
+						style={{ textAlign: "center" }}
+					/>
+				) : (
+					<Chart
+						options={chartData.options}
+						series={chartData.series}
+						width="85%"
+						type="line"
+					/>
+				)}
+			</div>
 		</>
 	);
 };

@@ -1,30 +1,34 @@
 import { useEffect, useState } from "react";
 
 import Charts from "./Charts";
+import IndustryStock from "./IndustryStock";
 
-import { api } from "../services/api";
+import { industriesStock } from "../services/getData";
 
 import Loader from "react-loader-spinner";
 
 const IndustriesStock = () => {
-	const [companyName, setCompanyName] = useState("");
-	const [companyPrice, setCompanyPrice] = useState(0);
 	const [seriesData, setSeriesData] = useState([]);
 
+	const [companyName, setCompanyName] = useState("");
+	const [companyPrice, setCompanyPrice] = useState(0);
+	const [marketCap, setMarketCap] = useState(0);
+	const [averageVolume, setAverageVolume] = useState(0);
+	const [peRatio, setPeRatio] = useState(0);
+
 	const [isLoading, setIsLoading] = useState(false);
+	const [isError, setIsError] = useState(false);
+	const [error, setError] = useState("");
 
 	const getData = async (filterData) => {
 		setSeriesData([]);
 		setCompanyName("");
 
 		setIsLoading(true);
+		setIsError(false);
 
 		try {
-			const response = await api.get(
-				filterData
-					? `/stock/${filterData}/batch?types=quote,chart&range=1m`
-					: "/stock/market/batch?symbols=aapl,amzn,msft,googl,fb,nvda&types=quote,chart&range=1m"
-			);
+			const response = await industriesStock(filterData);
 
 			if (response.statusText !== "OK") {
 				throw new Error("Error requesting market stock data...");
@@ -58,9 +62,14 @@ const IndustriesStock = () => {
 
 				setCompanyName(response.data.quote.companyName);
 				setCompanyPrice(response.data.quote.latestPrice.toFixed(2));
+				setMarketCap(response.data.quote.marketCap);
+				setAverageVolume(response.data.quote.avgTotalVolume);
+				setPeRatio(response.data.quote.peRatio);
 			}
 		} catch (error) {
 			console.error(error);
+			setIsError(true);
+			setError(error.message);
 		}
 
 		setIsLoading(false);
@@ -72,6 +81,8 @@ const IndustriesStock = () => {
 
 	return (
 		<>
+			{isError && <div className="isError">Error:{error}</div>}
+
 			{isLoading ? (
 				<Loader
 					type="ThreeDots"
@@ -86,34 +97,18 @@ const IndustriesStock = () => {
 						<Charts
 							seriesData={seriesData}
 							chartType="bar"
-							title="Top Tech Companies Latest Price"
 							getData={getData}
 						/>
 					) : (
 						<>
-							<div>
-								<button
-									style={{
-										border: 0,
-										borderRadius: "1em",
-										padding: ".8em",
-										cursor: "pointer",
-										background: "#4f8ff7",
-										color: "#fff",
-										fontWeight: 600,
-										fontSize: "17px",
-										marginTop: "1em",
-									}}
-									onClick={() => getData()}
-								>
-									Tech companies latest price
-								</button>
-							</div>
-							<Charts
+							<IndustryStock
 								seriesData={seriesData}
-								chartType="candlestick"
-								title={`${companyName} - $${companyPrice}`}
-								getData={null}
+								companyName={companyName}
+								companyPrice={companyPrice}
+								getData={getData}
+								marketCap={marketCap}
+								averageVolume={averageVolume}
+								peRatio={peRatio}
 							/>
 						</>
 					)}
