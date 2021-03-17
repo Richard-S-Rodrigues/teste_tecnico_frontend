@@ -34,7 +34,7 @@ const IntradayPrices = () => {
 		try {
 			const response = await intradayPricesData(companySymbol);
 
-			if (response.statusText !== "OK") {
+			if (response.status !== 200) {
 				throw new Error("Error requesting data");
 			}
 

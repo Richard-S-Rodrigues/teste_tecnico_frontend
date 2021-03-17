@@ -22,7 +22,7 @@ const IndustriesStock = () => {
 		try {
 			const response = await industriesStockData();
 
-			if (response.statusText !== "OK") {
+			if (response.status !== 200) {
 				throw new Error("Error requesting market stock data...");
 			}
 
@@ -61,7 +61,11 @@ const IndustriesStock = () => {
 					style={{ textAlign: "center" }}
 				/>
 			) : (
-				<Charts seriesData={seriesData} chartType="bar" />
+				<Charts
+					seriesData={seriesData}
+					chartType="bar"
+					title="Tech Companies Latest Prices"
+				/>
 			)}
 		</>
 	);
